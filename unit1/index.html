@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Shine Bright - Unit 1</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Quicksand for a kid-friendly rounded look -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti for celebration effect -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        bamboo: {
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        sunny: {
+                            100: '#fef3c7',
+                            200: '#fde68a',
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        assistant: {
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        },
+                        magic: {
+                            100: '#fae8ff',
+                            500: '#d946ef',
+                            600: '#c026d3',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f0fdf4;
+            background-image: radial-gradient(#bbf7d0 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .option-btn:active:not(:disabled) { transform: translateY(0); }
+        @keyframes bounce-gentle {
+            0%, 100% { transform: translateY(-5%); }
+            50% { transform: translateY(0); }
+        }
+        .animate-bounce-gentle { animation: bounce-gentle 3s infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom scrollbar for passage */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen py-8 px-4 sm:px-6">
+
+    <div class="max-w-6xl mx-auto">
+        
+        <!-- Header -->
+        <header class="text-center mb-6 relative">
+            <div class="inline-block bg-white px-8 py-4 rounded-full shadow-lg border-4 border-bamboo-400 mb-4 animate-bounce-gentle">
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-bamboo-600 flex items-center justify-center gap-3">
+                    <span>✨</span> Story Shine Bright! <span>🌟</span>
+                </h1>
+            </div>
+            
+            <!-- Nhập Tên Học Sinh -->
+            <div class="max-w-md mx-auto mt-4 bg-white p-2 rounded-2xl shadow-md border-2 border-sunny-400 flex items-center gap-2">
+                <span class="text-2xl pl-3">🧑‍🎓</span>
+                <input type="text" id="student-name" class="flex-1 p-2 font-bold text-lg text-slate-700 focus:outline-none bg-transparent" placeholder="Nhập tên của em vào đây nhé...">
+            </div>
+        </header>
+
+        <!-- Lesson Navigation -->
+        <div class="mb-8">
+            <div class="bg-white rounded-2xl p-2 shadow-md border-2 border-bamboo-200">
+                <div id="lesson-tabs" class="flex overflow-x-auto no-scrollbar gap-2 p-1">
+                    <!-- Tabs generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 items-start">
+            
+            <!-- Left Column: The Passage (Có thêm max-h và thanh cuộn) -->
+            <div class="space-y-6 lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] overflow-y-auto custom-scrollbar rounded-3xl pb-2">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-bamboo-500 min-h-min">
+                    <div class="flex items-center justify-between gap-3 mb-6 border-b-2 border-bamboo-100 pb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-4xl">📖</span>
+                            <h2 id="passage-title" class="text-2xl sm:text-3xl font-bold text-bamboo-700">Đang tải...</h2>
+                        </div>
+                    </div>
+                    
+                    <div id="passage-content" class="text-lg sm:text-xl leading-relaxed space-y-4 font-medium text-slate-700">
+                        <!-- Nội dung đoạn văn -->
+                    </div>
+
+                    <!-- Illustration Box -->
+                    <div class="mt-8 bg-bamboo-50 rounded-2xl p-6 text-center border-2 border-dashed border-bamboo-300">
+                        <div id="passage-image-placeholder" class="text-6xl mb-3">🖼️</div>
+                        <p id="passage-image-desc" class="text-sm font-bold text-bamboo-600">Hình minh hoạ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Questions -->
+            <div>
+                <div class="bg-sunny-400 text-white rounded-t-3xl p-4 sm:p-6 shadow-md border-4 border-sunny-500 border-b-0 flex justify-between items-center relative z-50">
+                    <h2 class="text-2xl font-bold flex items-center gap-2">
+                        <span>✏️</span> Bài Tập
+                    </h2>
+                    <div id="score-container" class="bg-white text-sunny-600 font-bold px-4 py-2 rounded-full text-lg shadow-inner">
+                        Đã làm: <span id="answered-display">0</span>/<span id="total-questions-display">0</span>
+                    </div>
+                </div>
+                
+                <div id="questions-container" class="bg-white border-4 border-sunny-500 rounded-b-3xl p-4 sm:p-6 shadow-lg space-y-6 min-h-[300px] relative z-40">
+                    <!-- Questions will be injected here via JavaScript -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Celebration Modal -->
+    <div id="result-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center shadow-2xl border-8 border-sunny-400 transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="text-6xl mb-4" id="modal-emoji">🎉</div>
+            <h2 class="text-3xl font-extrabold text-bamboo-600 mb-2" id="modal-title">Chúc mừng bạn!</h2>
+            
+            <div class="flex justify-center gap-4 mb-6 mt-4">
+                <div class="bg-bamboo-50 border-2 border-bamboo-400 rounded-2xl p-4 w-1/2 shadow-sm">
+                    <div class="text-2xl mb-1">✅</div>
+                    <p class="text-sm text-bamboo-600 font-bold uppercase tracking-wider">Làm đúng</p>
+                    <p class="text-4xl text-bamboo-700 font-extrabold mt-1" id="modal-correct-score">0</p>
+                </div>
+                <div class="bg-red-50 border-2 border-red-400 rounded-2xl p-4 w-1/2 shadow-sm">
+                    <div class="text-2xl mb-1">❌</div>
+                    <p class="text-sm text-red-600 font-bold uppercase tracking-wider">Làm sai</p>
+                    <p class="text-4xl text-red-700 font-extrabold mt-1" id="modal-incorrect-score">0</p>
+                </div>
+            </div>
+
+            <p class="text-lg text-slate-500 mb-8 font-medium" id="modal-message">
+                Tuyệt vời quá! Kết quả của em đã được gửi cho cô giáo rồi nhé!
+            </p>
+            <button onclick="closeModal()" class="w-full bg-bamboo-500 hover:bg-bamboo-600 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transition-colors duration-200">
+                Xem lại bài làm 🔍
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- DỮ LIỆU BÀI HỌC UNIT 1 ---
+        const lessonPassageHTML = `
+            <div class="mb-5">
+                <audio controls class="w-full rounded-full shadow-sm border-2 border-bamboo-200 bg-bamboo-50">
+                    <source src="Unit 1. Time to sing.wav" type="audio/wav">
+                    Trình duyệt của bạn không hỗ trợ phát âm thanh.
+                </audio>
+            </div>
+            <p>Jay likes school. He loves English and math. He likes science too, but he doesn't like music class! Jay is not good at singing.</p>
+            <p>Today, in music class, Jay was singing very quietly.</p>
+            <p>"Sing loudly please, Jay," Mrs. Hickmore said.</p>
+            <p>So Jay sang loudly. Mrs. Hickmore listened to his singing.</p>
+            <p>It was hurting her ears!</p>
+            <p>"OK, sing quietly, Jay," Mrs. Hickmore said.</p>
+            <p>"Yes, Mrs. Hickmore," Jay said, smiling.</p>
+        `;
+
+        const lessonsData = [
+            {
+                id: '1A',
+                title: "Time to Sing (Từ Vựng)",
+                emoji: "🎶🎤",
+                imageDesc: "Jay and Mrs. Hickmore in music class",
+                wordBank: ["school", "English", "math", "science", "music", "quietly", "loudly", "hurting"],
+                passage: lessonPassageHTML,
+                questions: [
+                    // A. Missing Letters
+                    { id: '1a_m1', section: 'A. Missing Letters (Điền chữ cái còn thiếu)', type: 'input', question: "q _ i e t l y ➔ <b>___</b>", correctAnswer: "quietly", explanation: "Từ hoàn chỉnh là 'quietly' (một cách yên tĩnh)." },
+                    { id: '1a_m2', type: 'input', question: "s _ n g ➔ <b>___</b>", correctAnswer: "sing", explanation: "Từ hoàn chỉnh là 'sing' (hát)." },
+                    { id: '1a_m3', type: 'input', question: "s c _ e n c e ➔ <b>___</b>", correctAnswer: "science", explanation: "Từ hoàn chỉnh là 'science' (môn khoa học)." },
+                    { id: '1a_m4', type: 'input', question: "l _ u d l y ➔ <b>___</b>", correctAnswer: "loudly", explanation: "Từ hoàn chỉnh là 'loudly' (to tiếng, lớn tiếng)." },
+                    { id: '1a_m5', type: 'input', question: "h _ r t ➔ <b>___</b>", correctAnswer: "hurt", explanation: "Từ hoàn chỉnh là 'hurt' (làm đau)." },
+                    { id: '1a_m6', type: 'input', question: "s c _ o o l ➔ <b>___</b>", correctAnswer: "school", explanation: "Từ hoàn chỉnh là 'school' (trường học)." },
+                    { id: '1a_m7', type: 'input', question: "e n g l _ s h ➔ <b>___</b>", correctAnswer: "english", explanation: "Từ hoàn chỉnh là 'English' (môn tiếng Anh)." },
+                    { id: '1a_m8', type: 'input', question: "m _ t h ➔ <b>___</b>", correctAnswer: "math", explanation: "Từ hoàn chỉnh là 'math' (môn toán)." },
+                    
+                    // B. Word Scramble
+                    { id: '1a_w1', section: 'B. Word Scramble (Sắp xếp chữ cái tạo thành từ)', type: 'input', question: "e - l - y - t - i - u - q ➔ <b>___</b>", correctAnswer: "quietly", explanation: "Sắp xếp lại thành 'quietly'." },
+                    { id: '1a_w2', type: 'input', question: "n - g - i - s ➔ <b>___</b>", correctAnswer: "sing", explanation: "Sắp xếp lại thành 'sing'." },
+                    { id: '1a_w3', type: 'input', question: "e - c - n - e - s - i - c ➔ <b>___</b>", correctAnswer: "science", explanation: "Sắp xếp lại thành 'science'." },
+                    { id: '1a_w4', type: 'input', question: "y - o - u - d - l - u - l ➔ <b>___</b>", correctAnswer: "loudly", explanation: "Sắp xếp lại thành 'loudly'." },
+                    { id: '1a_w5', type: 'input', question: "r - u - h - t ➔ <b>___</b>", correctAnswer: "hurt", explanation: "Sắp xếp lại thành 'hurt'." },
+                    { id: '1a_w6', type: 'input', question: "l - o - o - h - c - s ➔ <b>___</b>", correctAnswer: "school", explanation: "Sắp xếp lại thành 'school'." },
+                    { id: '1a_w7', type: 'input', question: "s - h - g - l - n - e - i ➔ <b>___</b>", correctAnswer: "english", explanation: "Sắp xếp lại thành 'english'." },
+                    { id: '1a_w8', type: 'input', question: "h - t - a - m ➔ <b>___</b>", correctAnswer: "math", explanation: "Sắp xếp lại thành 'math'." },
+
+                    // C. Fill in the blanks
+                    { id: '1a_f1', section: 'C. Fill in the blanks (Điền từ vào chỗ trống)', useWordBank: true, type: 'input', question: "Jay likes <b>___</b> and loves English and math.", correctAnswer: "school", explanation: "Từ cần điền là 'school'." },
+                    { id: '1a_f2', type: 'input', question: "He likes science too, but doesn't like <b>___</b> class.", correctAnswer: "music", explanation: "Từ cần điền là 'music'." },
+                    { id: '1a_f3', type: 'input', question: "Jay was singing very <b>___</b> in class.", correctAnswer: "quietly", explanation: "Từ cần điền là 'quietly'." },
+                    { id: '1a_f4', type: 'input', question: "Mrs. Hickmore asked him to sing <b>___</b>.", correctAnswer: "loudly", explanation: "Từ cần điền là 'loudly'." },
+                    { id: '1a_f5', type: 'input', question: "Jay's loud singing was <b>___</b> Mrs. Hickmore's ears.", correctAnswer: "hurting", explanation: "Từ cần điền là 'hurting'." }
+                ]
+            },
+            {
+                id: '1B',
+                title: "Time to Sing (Đọc Hiểu)",
+                emoji: "🎶🎤",
+                imageDesc: "Jay and Mrs. Hickmore in music class",
+                wordBank: ["school", "science", "music", "singing", "quietly", "loudly", "hurting"],
+                passage: lessonPassageHTML,
+                questions: [
+                    // I. True or False
+                    { id: '1b_tf1', section: 'I. Check Your Understanding (Đúng hay Sai?)', question: "Jay likes school and loves English and math.", options: [{ id: 'True', text: "True" }, { id: 'False', text: "False" }], correctAnswer: 'True', explanation: "Đúng, bài đọc ghi 'Jay likes school. He loves English and math'." },
+                    { id: '1b_tf2', question: "Jay is very good at singing in music class.", options: [{ id: 'True', text: "True" }, { id: 'False', text: "False" }], correctAnswer: 'False', explanation: "Sai, 'Jay is not good at singing'." },
+                    { id: '1b_tf3', question: "Mrs. Hickmore asked Jay to sing loudly first.", options: [{ id: 'True', text: "True" }, { id: 'False', text: "False" }], correctAnswer: 'True', explanation: "Đúng, cô giáo bảo cậu hát to lên ('Sing loudly please, Jay')." },
+                    { id: '1b_tf4', question: "Jay's loud singing hurt Mrs. Hickmore's ears.", options: [{ id: 'True', text: "True" }, { id: 'False', text: "False" }], correctAnswer: 'True', explanation: "Đúng, 'It was hurting her ears!'." },
+                    { id: '1b_tf5', question: "Jay smiled when Mrs. Hickmore told him to sing quietly again.", options: [{ id: 'True', text: "True" }, { id: 'False', text: "False" }], correctAnswer: 'True', explanation: "Đúng, 'Jay said, smiling'." },
+
+                    // II. Multiple Choice
+                    { id: '1b_mc1', section: 'II. Circle the Correct Answer (Chọn đáp án đúng)', question: "What subjects does Jay love?", options: [{ id: 'A', text: "English and math." }, { id: 'B', text: "Art and PE." }], correctAnswer: 'A', explanation: "Jay yêu thích tiếng Anh và toán học." },
+                    { id: '1b_mc2', question: "How was Jay singing at first?", options: [{ id: 'A', text: "Very loudly." }, { id: 'B', text: "Very quietly." }], correctAnswer: 'B', explanation: "Lúc đầu Jay hát rất khẽ (very quietly)." },
+                    { id: '1b_mc3', question: "What did Mrs. Hickmore tell Jay to do first?", options: [{ id: 'A', text: "Sing quietly." }, { id: 'B', text: "Sing loudly." }], correctAnswer: 'B', explanation: "Cô giáo yêu cầu cậu hát to lên trước." },
+                    { id: '1b_mc4', question: "How did Mrs. Hickmore feel about Jay's loud singing?", options: [{ id: 'A', text: "It was hurting her ears." }, { id: 'B', text: "She liked it very much." }], correctAnswer: 'A', explanation: "Tiếng hát to làm cô giáo đau tai." },
+                    { id: '1b_mc5', question: "What did Jay do at the end?", options: [{ id: 'A', text: "He cried." }, { id: 'B', text: "He smiled and said yes." }], correctAnswer: 'B', explanation: "Cậu bé mỉm cười và vâng lời." },
+
+                    // III. Story Summary
+                    { id: '1b_sum1', section: 'III. Story Summary (Điền từ tóm tắt câu chuyện)', useWordBank: true, type: 'input', question: "Jay likes (1) <b>___</b>", correctAnswer: "school", explanation: "Từ cần điền là 'school'." },
+                    { id: '1b_sum2', type: 'input', question: "and loves English and math. He likes (2) <b>___</b> too,", correctAnswer: "science", explanation: "Từ cần điền là 'science'." },
+                    { id: '1b_sum3', type: 'input', question: "but he doesn't like (3) <b>___</b> class.", correctAnswer: "music", explanation: "Từ cần điền là 'music'." },
+                    { id: '1b_sum4', type: 'input', question: "Jay is not good at (4) <b>___</b>.", correctAnswer: "singing", explanation: "Từ cần điền là 'singing'." },
+                    { id: '1b_sum5', type: 'input', question: "In class, he sang very (5) <b>___</b>.", correctAnswer: "quietly", explanation: "Từ cần điền là 'quietly'." },
+                    { id: '1b_sum6', type: 'input', question: "Mrs. Hickmore told him to sing (6) <b>___</b>.", correctAnswer: "loudly", explanation: "Từ cần điền là 'loudly'." },
+                    { id: '1b_sum7', type: 'input', question: "When he did, it was (7) <b>___</b> her ears,", correctAnswer: "hurting", explanation: "Từ cần điền là 'hurting'." },
+                    { id: '1b_sum8', type: 'input', question: "so she told him to sing quietly again.", correctAnswer: "", explanation: "" },
+
+                    // IV. Find the Mistake
+                    { id: '1b_err1', section: 'IV. Find the mistake and correct it (Tìm lỗi sai và sửa lại)', type: 'input', question: "Jay <u>dislikes school completely</u>. ➔ <b>___</b>", correctAnswer: "likes school", explanation: "Theo bài đọc, Jay thích trường học ('Jay likes school')." },
+                    { id: '1b_err2', type: 'input', question: "Jay is <u>very good at singing</u>. ➔ <b>___</b>", correctAnswer: "not good at singing", explanation: "Jay hát không giỏi ('Jay is not good at singing')." },
+                    { id: '1b_err3', type: 'input', question: "Mrs. Hickmore asked Jay to <u>dance quietly</u>. ➔ <b>___</b>", correctAnswer: "sing loudly", explanation: "Cô giáo bảo cậu hát to lên ('sing loudly')." },
+                    { id: '1b_err4', type: 'input', question: "Jay's singing was hurting Mrs. Hickmore's <u>eyes</u>. ➔ <b>___</b>", correctAnswer: "ears", explanation: "Tiếng hát làm đau tai ('ears') chứ không phải mắt." }
+                ]
+            }
+        ];
+
+        let currentLessonId = '1A'; 
+        let currentScore = 0;
+        let userAnswers = {}; 
+        let currentWordBank = [];
+
+        function initApp() {
+            renderLessonTabs();
+            loadLesson(currentLessonId);
+        }
+
+        function renderLessonTabs() {
+            const tabsContainer = document.getElementById('lesson-tabs');
+            tabsContainer.innerHTML = '';
+            lessonsData.forEach(lesson => {
+                const btn = document.createElement('button');
+                btn.className = `lesson-tab flex-shrink-0 px-5 py-3 rounded-xl font-bold text-sm sm:text-base transition-colors border-2`;
+                btn.innerText = `Bài ${lesson.id}`;
+                btn.onclick = () => loadLesson(lesson.id);
+                
+                if (lesson.id === currentLessonId) {
+                    btn.classList.add('bg-bamboo-500', 'text-white', 'border-bamboo-600', 'shadow-md');
+                } else {
+                    btn.classList.add('bg-white', 'text-slate-500', 'border-slate-200', 'hover:bg-bamboo-50', 'hover:text-bamboo-600');
+                }
+                tabsContainer.appendChild(btn);
+            });
+        }
+
+        function loadLesson(lessonId) {
+            currentLessonId = lessonId;
+            const lesson = lessonsData.find(l => l.id === lessonId);
+            
+            currentScore = 0;
+            userAnswers = {};
+            currentWordBank = lesson.wordBank || [];
+            renderLessonTabs();
+
+            document.getElementById('passage-title').innerText = lesson.title;
+            document.getElementById('passage-content').innerHTML = lesson.passage;
+            document.getElementById('passage-image-placeholder').innerText = lesson.emoji || "🖼️";
+            document.getElementById('passage-image-desc').innerText = lesson.imageDesc || "Hình minh hoạ";
+
+            const qContainer = document.getElementById('questions-container');
+            qContainer.innerHTML = ''; 
+            
+            document.getElementById('total-questions-display').innerText = lesson.questions.length;
+            document.getElementById('answered-display').innerText = '0';
+
+            let currentSection = '';
+            let currentSectionContainer = qContainer;
+
+            lesson.questions.forEach((q, index) => {
+                if (q.section && q.section !== currentSection) {
+                    currentSection = q.section;
+                    
+                    currentSectionContainer = document.createElement('div');
+                    currentSectionContainer.className = 'space-y-6 pb-4'; 
+                    qContainer.appendChild(currentSectionContainer);
+
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'col-span-full bg-sunny-100 text-sunny-700 font-extrabold p-4 rounded-2xl mt-6 mb-2 border-l-8 border-sunny-500 text-xl tracking-wide shadow-sm';
+                    sectionHeader.innerHTML = q.section;
+                    currentSectionContainer.appendChild(sectionHeader);
+                    
+                    if (q.useWordBank && currentWordBank.length > 0) {
+                        const wbHtml = `
+                            <div id="sticky-word-bank-${index}" class="sticky top-4 z-50 bg-white/95 backdrop-blur-sm border-4 border-magic-400 p-5 rounded-2xl shadow-xl mb-4 mt-2 transition-all">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-extrabold text-magic-600 text-lg flex items-center gap-2"><span>🏷️</span> Word Bank</h3>
+                                    <span class="text-xs font-bold bg-magic-100 text-magic-600 px-2 py-1 rounded-md">Bấm vào từ để điền nhanh!</span>
+                                </div>
+                                <div class="word-bank-words flex flex-wrap gap-2"></div>
+                            </div>
+                        `;
+                        currentSectionContainer.insertAdjacentHTML('beforeend', wbHtml);
+                    }
+                }
+                
+                currentSectionContainer.appendChild(createQuestionCard(q, index));
+            });
+
+            const submitBtnHtml = `
+                <div id="submit-container" class="mt-8 pt-8 border-t-4 border-dashed border-slate-200 text-center">
+                    <button id="main-submit-btn" onclick="submitLesson()" class="bg-slate-300 text-slate-500 font-extrabold py-4 px-12 rounded-full text-2xl shadow-md transition-all duration-300 inline-flex items-center gap-3">
+                        <span>Nộp bài ngay</span> 🚀
+                    </button>
+                    <p id="submit-warning" class="text-red-500 font-bold mt-3 hidden"></p>
+                </div>
+            `;
+            qContainer.insertAdjacentHTML('beforeend', submitBtnHtml);
+
+            if (currentWordBank.length > 0) updateWordBankUI();
+        }
+
+        function createQuestionCard(q, index) {
+            const questionCard = document.createElement('div');
+            questionCard.className = 'question-card bg-slate-50 rounded-2xl p-5 border-2 border-slate-200';
+            questionCard.id = `q-card-${q.id}`;
+
+            const qHeader = document.createElement('div');
+            qHeader.className = 'flex gap-3 mb-4';
+            qHeader.innerHTML = `
+                <div class="bg-sunny-100 text-sunny-500 font-bold w-10 h-10 flex items-center justify-center rounded-full shrink-0 text-xl border-2 border-sunny-400 shadow-sm mt-1">${index + 1}</div>
+                <div class="w-full"><h3 class="text-xl font-bold text-slate-700 pt-1 leading-snug w-full">${q.question}</h3></div>
+            `;
+            questionCard.appendChild(qHeader);
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'space-y-3 pl-0 sm:pl-13 w-full';
+            
+            if (q.type === 'input') {
+                const wbClass = q.id.includes('f') || q.id.includes('sum') ? 'word-bank-input' : '';
+                optionsDiv.innerHTML = `
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <input type="text" id="input-${q.id}" class="flex-1 p-4 border-2 border-slate-300 rounded-xl font-bold text-lg text-slate-700 focus:border-sunny-400 focus:outline-none ${wbClass}" placeholder="Nhập câu trả lời..." oninput="resetInputState('${q.id}')" onkeypress="if(event.key === 'Enter') handleAnswer('${q.id}')">
+                        <button id="btn-${q.id}-submit" onclick="handleAnswer('${q.id}')" class="bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-4 px-8 rounded-xl transition-colors shadow-sm text-lg shrink-0">Lưu đáp án</button>
+                    </div>
+                `;
+            } else {
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.className = `option-btn w-full text-left p-4 rounded-xl border-2 border-slate-300 bg-white font-bold text-lg text-slate-600 flex items-center gap-3`;
+                    btn.id = `btn-${q.id}-${opt.id}`;
+                    
+                    const circleIconText = opt.id === 'True' ? 'T' : (opt.id === 'False' ? 'F' : (opt.id === 'A' || opt.id === 'B' || opt.id === 'C' ? opt.id : opt.id));
+                    
+                    btn.innerHTML = `<span class="inline-block w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center border-2 border-slate-200 shrink-0 uppercase indicator-circle">${circleIconText}</span> <span>${opt.text}</span>`;
+                    btn.onclick = () => handleAnswer(q.id, opt.id);
+                    optionsDiv.appendChild(btn);
+                });
+            }
+            questionCard.appendChild(optionsDiv);
+
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.id = `feedback-${q.id}`;
+            feedbackDiv.className = 'mt-5 hidden rounded-2xl p-5 text-lg font-medium shadow-inner';
+            questionCard.appendChild(feedbackDiv);
+
+            return questionCard;
+        }
+
+        function updateWordBankUI() {
+            if (!currentWordBank || currentWordBank.length === 0) return;
+            const wbContainers = document.querySelectorAll('.word-bank-words');
+            if (wbContainers.length === 0) return;
+            
+            const inputs = document.querySelectorAll('.word-bank-input');
+            const usedWords = Array.from(inputs).map(i => i.value.trim().toLowerCase());
+            
+            wbContainers.forEach(container => {
+                let tempUsed = [...usedWords];
+                
+                container.innerHTML = currentWordBank.map(w => {
+                    const wordLower = w.toLowerCase();
+                    const indexInUsed = tempUsed.indexOf(wordLower);
+                    
+                    if (indexInUsed !== -1) {
+                        tempUsed.splice(indexInUsed, 1);
+                        return `<span class="bg-slate-100 text-slate-400 px-4 py-2 rounded-xl font-bold border-2 border-slate-200 line-through opacity-60 select-none">${w}</span>`;
+                    } else {
+                        return `<span onclick="fillNextEmptyWord('${w}')" class="bg-magic-100 text-magic-700 px-4 py-2 rounded-xl font-bold border-2 border-magic-300 shadow-sm cursor-pointer hover:bg-magic-200">${w}</span>`;
+                    }
+                }).join('');
+            });
+        }
+
+        function fillNextEmptyWord(word) {
+            const inputs = document.querySelectorAll('.word-bank-input');
+            for (let input of inputs) {
+                if (!input.value.trim() && !input.disabled) {
+                    input.value = word;
+                    const qId = input.id.replace('input-', '');
+                    resetInputState(qId);
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    handleAnswer(qId);
+                    break;
+                }
+            }
+        }
+
+        function resetInputState(qId) {
+            const btn = document.getElementById(`btn-${qId}-submit`);
+            if(btn) {
+                btn.innerText = 'Lưu đáp án';
+                btn.className = 'bg-slate-300 hover:bg-slate-400 text-slate-700 font-bold py-4 px-8 rounded-xl transition-colors shadow-sm text-lg shrink-0';
+            }
+            updateWordBankUI();
+        }
+
+        function handleAnswer(questionId, selectedOptionId) {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const q = lesson.questions.find(q => q.id === questionId);
+            
+            let isCorrect = false, userVal = "", correctDisplay = "";
+
+            if (q.type === 'input') {
+                userVal = document.getElementById(`input-${questionId}`).value;
+                if (!userVal.trim()) return; 
+                isCorrect = userVal.toLowerCase().replace(/[^a-z0-9]/g, '') === q.correctAnswer.toLowerCase().replace(/[^a-z0-9]/g, '');
+                correctDisplay = q.correctAnswer;
+                
+                const btnSubmit = document.getElementById(`btn-${questionId}-submit`);
+                btnSubmit.className = 'bg-sunny-400 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-sm text-lg shrink-0';
+                btnSubmit.innerText = 'Đã lưu ✓';
+                updateWordBankUI();
+            } else {
+                isCorrect = selectedOptionId === q.correctAnswer;
+                correctDisplay = q.options.find(o => o.id === q.correctAnswer).text;
+                userVal = selectedOptionId;
+                
+                q.options.forEach(opt => {
+                    const btn = document.getElementById(`btn-${questionId}-${opt.id}`);
+                    const circleIconText = opt.id === 'True' ? 'T' : (opt.id === 'False' ? 'F' : (opt.id === 'A' || opt.id === 'B' || opt.id === 'C' ? opt.id : opt.id));
+
+                    if (opt.id === selectedOptionId) {
+                        btn.className = 'option-btn w-full text-left p-4 rounded-xl border-2 bg-sunny-50 border-sunny-400 text-sunny-700 font-bold text-lg flex items-center gap-3';
+                        const span = btn.querySelector('.indicator-circle');
+                        span.className = 'inline-block w-8 h-8 rounded-full bg-sunny-400 text-white flex items-center justify-center border-2 border-sunny-400 shrink-0 uppercase indicator-circle';
+                        span.innerText = circleIconText;
+                    } else {
+                        btn.className = 'option-btn w-full text-left p-4 rounded-xl border-2 border-slate-300 bg-white opacity-50 font-bold text-lg text-slate-600 flex items-center gap-3';
+                        const span = btn.querySelector('.indicator-circle');
+                        span.className = 'inline-block w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center border-2 border-slate-200 shrink-0 uppercase indicator-circle';
+                        span.innerText = circleIconText;
+                    }
+                });
+            }
+
+            userAnswers[questionId] = { value: userVal, isCorrect: isCorrect, correctDisplay: correctDisplay };
+            document.getElementById('answered-display').innerText = Object.keys(userAnswers).length;
+            
+            if (Object.keys(userAnswers).length === lesson.questions.length) {
+                const mainBtn = document.getElementById('main-submit-btn');
+                mainBtn.className = 'bg-gradient-to-r from-sunny-400 to-sunny-500 hover:from-sunny-500 hover:to-sunny-600 text-white font-extrabold py-4 px-12 rounded-full text-2xl shadow-xl transform hover:scale-105 transition-all inline-flex items-center gap-3';
+                document.getElementById('submit-warning').classList.add('hidden');
+            }
+        }
+
+        async function submitLesson() {
+            const lesson = lessonsData.find(l => l.id === currentLessonId);
+            const studentName = document.getElementById('student-name').value.trim();
+            const warning = document.getElementById('submit-warning');
+            
+            if (!studentName) {
+                warning.innerText = `Em hãy nhập tên của mình ở đầu trang trước khi nộp bài nhé!`;
+                warning.classList.remove('hidden');
+                document.getElementById('student-name').focus();
+                return;
+            }
+
+            if (Object.keys(userAnswers).length < lesson.questions.length) {
+                warning.innerText = `Em mới làm ${Object.keys(userAnswers).length}/${lesson.questions.length} câu. Hãy hoàn thành hết rồi nộp nhé!`;
+                warning.classList.remove('hidden');
+                return;
+            }
+
+            const btn = document.getElementById('main-submit-btn');
+            btn.innerHTML = `<div class="spinner border-t-white w-6 h-6 mr-2"></div> Đang gửi kết quả...`;
+            btn.disabled = true;
+            warning.classList.add('hidden');
+
+            currentScore = 0;
+            let mistakesList = [];
+            
+            lesson.questions.forEach((q, idx) => {
+                const ans = userAnswers[q.id];
+                const feedbackDiv = document.getElementById(`feedback-${q.id}`);
+                const qCard = document.getElementById(`q-card-${q.id}`);
+
+                if (q.type === 'input') {
+                    document.getElementById(`input-${q.id}`).disabled = true;
+                    document.getElementById(`btn-${q.id}-submit`).disabled = true;
+                } else {
+                    q.options.forEach(opt => document.getElementById(`btn-${q.id}-${opt.id}`).disabled = true);
+                }
+
+                if (ans.isCorrect) {
+                    currentScore++;
+                    qCard.classList.add('border-bamboo-300', 'bg-bamboo-50/20');
+                    feedbackDiv.className = 'mt-5 rounded-2xl p-5 text-lg bg-assistant-100 border-2 border-assistant-500 block';
+                    feedbackDiv.innerHTML = `<div class="font-bold text-assistant-700 text-xl">Chính xác! ${q.explanation}</div>`;
+                } else {
+                    mistakesList.push(`Câu ${idx + 1} (Điền: ${ans.value} -> Đúng: ${ans.correctDisplay})`);
+                    qCard.classList.add('border-red-200', 'bg-red-50/20');
+                    feedbackDiv.className = 'mt-5 rounded-2xl p-5 text-lg bg-red-50 border-2 border-red-300 block';
+                    feedbackDiv.innerHTML = `
+                        <div class="font-bold text-red-600 text-xl mb-1">Chưa đúng rồi!</div>
+                        <div class="bg-white rounded-lg p-3 border border-red-100 shadow-sm mb-2"><span class="font-bold text-slate-800">👉 Đáp án đúng là: <span class="text-bamboo-600">${ans.correctDisplay}</span></span></div>
+                        <span class="font-normal text-slate-700"><b>💡 Vì sao nhỉ?</b> ${q.explanation}</span>
+                    `;
+                }
+            });
+
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzX5jUEzt05bvIoSkKqn_XRBFG9MyRBFgwEoUgdZixbPlmgLcFH0NOp9Wi6NeoVfZ-E/exec';
+            const ratio = currentScore / lesson.questions.length;
+            let comments = ratio === 1 ? "Xuất sắc! Điểm tối đa." : (ratio >= 0.7 ? "Rất giỏi!" : "Cố gắng lên nhé!");
+            
+            const payload = {
+                userName: studentName,
+                score: `${currentScore}/${lesson.questions.length}`,
+                modul: lesson.title,
+                mistakes: mistakesList.length > 0 ? mistakesList.join(' | ') : "Không có lỗi sai nào",
+                knowledge: "Reading Comprehension & Vocabulary",
+                comments: comments
+            };
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    redirect: 'follow', 
+                    headers: { 
+                        'Content-Type': 'text/plain;charset=utf-8' 
+                    },
+                    body: JSON.stringify(payload)
+                });
+                console.log("Đã yêu cầu lưu kết quả lên Sheets!");
+            } catch (error) {
+                console.error("Có thể bị lỗi CORS trên trình duyệt, nhưng dữ liệu vẫn lên Sheet:", error);
+            }
+
+            document.getElementById('submit-container').classList.add('hidden');
+            showResult(lesson.questions.length);
+        }
+
+        function showResult(totalQs) {
+            const modal = document.getElementById('result-modal');
+            document.getElementById('modal-correct-score').innerText = currentScore;
+            document.getElementById('modal-incorrect-score').innerText = totalQs - currentScore;
+            
+            const ratio = currentScore / totalQs;
+            if (ratio === 1) {
+                document.getElementById('modal-title').innerText = "Xuất sắc!";
+                document.getElementById('modal-title').className = "text-3xl font-extrabold text-bamboo-600 mb-2";
+                fireConfetti();
+            } else if (ratio >= 0.6) {
+                document.getElementById('modal-title').innerText = "Giỏi lắm!";
+                document.getElementById('modal-title').className = "text-3xl font-extrabold text-sunny-500 mb-2";
+                fireConfetti();
+            } else {
+                document.getElementById('modal-title').innerText = "Cố lên nhé!";
+                document.getElementById('modal-title').className = "text-3xl font-extrabold text-blue-500 mb-2";
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('modal-content').classList.remove('scale-95');
+                document.getElementById('modal-content').classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').classList.add('hidden');
+            document.getElementById('modal-content').classList.remove('scale-100');
+            document.getElementById('modal-content').classList.add('scale-95');
+            document.getElementById('questions-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function fireConfetti() {
+            var duration = 3 * 1000, animationEnd = Date.now() + duration, defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        window.onload = initApp;
+    </script>
+</body>
+</html>
