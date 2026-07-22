@@ -68,6 +68,22 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* Custom scrollbar for passage */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
         .spinner {
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
@@ -113,9 +129,9 @@
         <!-- Main Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 items-start">
             
-            <!-- Left Column: The Passage -->
-            <div class="space-y-6 lg:sticky lg:top-8">
-                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-bamboo-500">
+            <!-- Left Column: The Passage (Có thêm max-h và thanh cuộn) -->
+            <div class="space-y-6 lg:sticky lg:top-8 lg:max-h-[calc(100vh-4rem)] overflow-y-auto custom-scrollbar rounded-3xl pb-2">
+                <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-bamboo-500 min-h-min">
                     <div class="flex items-center justify-between gap-3 mb-6 border-b-2 border-bamboo-100 pb-4">
                         <div class="flex items-center gap-3">
                             <span class="text-4xl">📖</span>
@@ -220,7 +236,7 @@
                     { id: '9a_w5', type: 'input', question: "a - i - l - e - m ➔ <b>___</b>", correctAnswer: "e-mail", explanation: "Sắp xếp lại thành 'e-mail'." },
 
                     // C. Fill in the blanks
-                    { id: '9a_f1', section: 'C. Fill in the blanks (Điền từ vào chỗ trống)', type: 'input', question: "Did you <b>___</b> flowers to your aunt?", correctAnswer: "send", explanation: "Từ cần điền là 'send' (gửi)." },
+                    { id: '9a_f1', section: 'C. Fill in the blanks (Điền từ vào chỗ trống)', useWordBank: true, type: 'input', question: "Did you <b>___</b> flowers to your aunt?", correctAnswer: "send", explanation: "Từ cần điền là 'send' (gửi)." },
                     { id: '9a_f2', type: 'input', question: "I wrote a <b>___</b> on nice paper.", correctAnswer: "letter", explanation: "Từ cần điền là 'letter' (lá thư)." },
                     { id: '9a_f3', type: 'input', question: "I want to buy a new <b>___</b>.", correctAnswer: "computer", explanation: "Từ cần điền là 'computer' (máy tính)." },
                     { id: '9a_f4', type: 'input', question: "I check my <b>___</b> every day.", correctAnswer: "e-mail", explanation: "Từ cần điền là 'e-mail' (thư điện tử)." },
@@ -241,10 +257,10 @@
                     { id: '9b_tf3', question: "Using e-mail makes Anna happy.", options: [{ id: 'True', text: "True" }, { id: 'False', text: "False" }], correctAnswer: 'True', explanation: "Đúng, bài đọc nói 'Using e-mail makes both of us happy'." },
 
                     // II. Multiple Choice
-                    { id: '9b_mc1', section: 'II. Circle the Correct Answer (Chọn đáp án đúng)', question: "\"It's easy to send her e-mail.\" Her means ______.", options: [{ id: 'a', text: "Anna" }, { id: 'b', text: "Aunt Julie" }], correctAnswer: 'b', explanation: "'Her' chỉ Dì Julie (Aunt Julie)." },
-                    { id: '9b_mc2', question: "\"Using e-mail makes both of us happy.\" Us means ______.", options: [{ id: 'a', text: "Aunt Julie and her friends" }, { id: 'b', text: "Aunt Julie and Anna" }], correctAnswer: 'b', explanation: "'Us' (chúng tôi) chỉ Dì Julie và Anna." },
-                    { id: '9b_mc3', question: "Why isn't Aunt Julie lonely?", options: [{ id: 'a', text: "She talks to Anna on the phone." }, { id: 'b', text: "She talks to her friends using e-mail." }], correctAnswer: 'b', explanation: "Dì Julie nói chuyện với bạn bè qua e-mail." },
-                    { id: '9b_mc4', question: "What does Anna sometimes send to Aunt Julie?", options: [{ id: 'a', text: "She sends her jokes." }, { id: 'b', text: "She sends her photographs." }], correctAnswer: 'a', explanation: "Anna gửi những câu chuyện cười (jokes)." },
+                    { id: '9b_mc1', section: 'II. Circle the Correct Answer (Chọn đáp án đúng)', question: "\"It's easy to send her e-mail.\" Her means ______.", options: [{ id: 'A', text: "Anna" }, { id: 'B', text: "Aunt Julie" }], correctAnswer: 'B', explanation: "'Her' chỉ Dì Julie (Aunt Julie)." },
+                    { id: '9b_mc2', question: "\"Using e-mail makes both of us happy.\" Us means ______.", options: [{ id: 'A', text: "Aunt Julie and her friends" }, { id: 'B', text: "Aunt Julie and Anna" }], correctAnswer: 'B', explanation: "'Us' (chúng tôi) chỉ Dì Julie và Anna." },
+                    { id: '9b_mc3', question: "Why isn't Aunt Julie lonely?", options: [{ id: 'A', text: "She talks to Anna on the phone." }, { id: 'B', text: "She talks to her friends using e-mail." }], correctAnswer: 'B', explanation: "Dì Julie nói chuyện với bạn bè qua e-mail." },
+                    { id: '9b_mc4', question: "What does Anna sometimes send to Aunt Julie?", options: [{ id: 'A', text: "She sends her jokes." }, { id: 'B', text: "She sends her photographs." }], correctAnswer: 'A', explanation: "Anna gửi những câu chuyện cười (jokes)." },
 
                     // III. Story Summary
                     { id: '9b_sum1', section: 'III. Story Summary (Điền từ tóm tắt câu chuyện)', useWordBank: true, type: 'input', question: "I just got an <b>___</b> from Aunt Julie.", correctAnswer: "e-mail", explanation: "Từ cần điền là 'e-mail'." },
@@ -258,8 +274,8 @@
                     // IV. Find the Mistake
                     { id: '9b_err1', section: 'IV. Find the mistake and correct it (Tìm lỗi sai và sửa lại)', type: 'input', question: "I <u>hear</u> from Aunt Julie yesterday. ➔ <b>___</b>", correctAnswer: "heard", explanation: "Sự việc đã xảy ra ('yesterday') nên đổi 'hear' thành 'heard'." },
                     { id: '9b_err2', type: 'input', question: "<u>Use</u> e-mail makes us happy. ➔ <b>___</b>", correctAnswer: "Using", explanation: "Đứng đầu câu làm chủ ngữ cần dùng V-ing: 'Using'." },
-                    { id: '9b_err3', type: 'input', question: "I like <u>get</u> e-mail too. ➔ <b>___</b>", correctAnswer: "getting", explanation: "Sau 'like' có thể dùng V-ing: 'getting'." },
-                    { id: '9b_err4', type: 'input', question: "I didn't <u>got</u> a call on the phone. ➔ <b>___</b>", correctAnswer: "get", explanation: "Sau 'didn't' động từ nguyên thể: 'get'." }
+                    { id: '9b_err3', type: 'input', question: "I like <u>get</u> e-mail too. ➔ <b>___</b>", correctAnswer: "getting", explanation: "Sau 'like' có thể dùng V-ing: 'getting'. Hoặc dùng 'to get'." },
+                    { id: '9b_err4', type: 'input', question: "I didn't <u>got</u> a call on the phone. ➔ <b>___</b>", correctAnswer: "get", explanation: "Sau 'didn't' động từ trở về nguyên thể: 'get'." }
                 ]
             }
         ];
@@ -394,7 +410,7 @@
                     btn.id = `btn-${q.id}-${opt.id}`;
                     
                     // Logic thu gọn icon cho câu hỏi True/False
-                    const circleIconText = opt.id === 'True' ? 'T' : (opt.id === 'False' ? 'F' : opt.id);
+                    const circleIconText = opt.id === 'True' ? 'T' : (opt.id === 'False' ? 'F' : (opt.id === 'a' || opt.id === 'b' ? opt.id.toUpperCase() : opt.id));
                     
                     btn.innerHTML = `<span class="inline-block w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center border-2 border-slate-200 shrink-0 uppercase indicator-circle">${circleIconText}</span> <span>${opt.text}</span>`;
                     btn.onclick = () => handleAnswer(q.id, opt.id);
@@ -417,12 +433,17 @@
             const wbContainer = document.getElementById('word-bank-words');
             if (!wbContainer) return;
             
-            const inputs = document.querySelectorAll('input[id*="_sum"]');
+            const inputs = document.querySelectorAll('input[id*="_sum"], input[id*="_f"]'); // Cập nhật cho cả phần C. Fill in the blanks
             const usedWords = Array.from(inputs).map(i => i.value.trim().toLowerCase());
             
+            let tempUsed = [...usedWords];
+            
             wbContainer.innerHTML = currentWordBank.map(w => {
-                const isUsed = usedWords.includes(w.toLowerCase());
-                if (isUsed) {
+                const wordLower = w.toLowerCase();
+                const indexInUsed = tempUsed.indexOf(wordLower);
+                
+                if (indexInUsed !== -1) {
+                    tempUsed.splice(indexInUsed, 1);
                     return `<span class="bg-slate-100 text-slate-400 px-4 py-2 rounded-xl font-bold border-2 border-slate-200 line-through opacity-60 select-none">${w}</span>`;
                 } else {
                     return `<span onclick="fillNextEmptyWord('${w}')" class="bg-magic-100 text-magic-700 px-4 py-2 rounded-xl font-bold border-2 border-magic-300 shadow-sm cursor-pointer hover:bg-magic-200">${w}</span>`;
@@ -431,9 +452,9 @@
         }
 
         function fillNextEmptyWord(word) {
-            const inputs = document.querySelectorAll('input[id*="_sum"]');
+            const inputs = document.querySelectorAll('input[id*="_sum"], input[id*="_f"]');
             for (let input of inputs) {
-                if (!input.value.trim()) {
+                if (!input.value.trim() && !input.disabled) {
                     input.value = word;
                     const qId = input.id.replace('input-', '');
                     resetInputState(qId);
@@ -476,7 +497,8 @@
                 
                 q.options.forEach(opt => {
                     const btn = document.getElementById(`btn-${questionId}-${opt.id}`);
-                    const circleIconText = opt.id === 'True' ? 'T' : (opt.id === 'False' ? 'F' : opt.id);
+                    // Cập nhật hiển thị A/B viết hoa cho các nút
+                    const circleIconText = opt.id === 'True' ? 'T' : (opt.id === 'False' ? 'F' : (opt.id === 'a' || opt.id === 'b' ? opt.id.toUpperCase() : opt.id));
 
                     if (opt.id === selectedOptionId) {
                         btn.className = 'option-btn w-full text-left p-4 rounded-xl border-2 bg-sunny-50 border-sunny-400 text-sunny-700 font-bold text-lg flex items-center gap-3';
